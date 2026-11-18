@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AquaLogic · Simulador Inteligente de Gestión del Agua</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<header class="top">
+  <div class="org">✣ Depto. Académico de Sistemas Computacionales - UABCS</div>
+  <nav id="nav">
+    <button class="nb on" id="nbHome" data-page="p-inicio">Inicio</button><i class="dot"></i>
+    <button class="nb" id="nbInfo" data-page="p-mision">Descripción</button>
+  </nav>
+  <div class="right"><button class="ghostb" id="bContact"><span class="plus">+</span> Contacto</button></div>
+</header>
+<main>
+
+<section class="page info" id="p-mision" data-title="Misión">
+  <h1>Misión</h1><p class="desc">Qué es AquaLogic y cómo obtiene los datos.</p>
+  <div class="cards"><div class="card"><p>AquaLogic es un simulador matemático que sirve para calcular y monitorear el agua de cualquier tipo de cisterna o almacenamiento.</p>
+    <div class="note">Está enfocado a instituciones académicas, pero puede utilizarse en todo tipo de situaciones (por ejemplo, una familia).</div></div>
+  <div class="card"><p>Esta herramienta de supervisión inteligente predice el agotamiento, detecta fugas invisibles y recomienda ajustes de consumo según la matrícula.</p></div></div>
+</section>
+<section class="page info" id="p-sensores" data-title="Sensores">
+  <h1>Sensores</h1><p class="desc">Cómo se miden los litros que consume la escuela.</p>
+  <div class="cards"><div class="card"><h3>En cada cisterna</h3><p>AquaLogic implementa en su sistema de cálculo un sensor en cada cisterna. El sensor calcula cuántos litros se consumieron durante el día. Para regular las cantidades máximas de cada área sería necesario instalar tuberías para diferentes propósitos y un medidor independiente para cada una, según el área.</p></div>
+  <div class="card"><h3>Escuelas de bajos recursos</h3><p>Para escuelas de bajos recursos se haría el cálculo con el promedio de litros que consume cada persona, sin necesidad de medidores o sensores independientes.</p></div></div>
+</section>
+<section class="page" id="p-inicio" data-title="Inicio">
+<div class="hero" id="s-hero">
+  <div class="herotx"><h1 class="giant">AquaLogic</h1><div class="subt">Simulador Inteligente de Gestión del Agua</div>
+  <div class="search"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#0b2a55" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l7 7"/></svg>¿Cómo se puede aprovechar mejor el agua?</div></div>
+</div>
+
+<div class="ini2">
+      <div class="formcard sform" id="schoolCard"><div class="fh"><b>Parámetros Iniciales</b><span class="tabs"><button id="mEsc" class="on">Escuela</button><button id="mFam">Familia</button></span></div>
+        <label>Capacidad de la cisterna (Litros)<span class="inp"><input id="scCap" type="number" min="1" value="50000"><em>L</em></span></label>
+        <label>Alumnos por turno<span class="inp"><input id="scAl" type="number" min="1" step="1" value="200"><em>alumnos</em></span></label>
+        <small>* Se asume turno mañana y tarde (2 turnos). El consumo de referencia es de 25 L por alumno al día (recomendado: 25 a 30 L).</small>
+        <label>Tiempo (días a la semana)<span class="inp"><input id="scDias" type="number" min="1" max="7" value="5"><em>días/sem</em></span></label>
+        <button class="btn" id="scBtn">Simular Evaluación →</button><div class="msg" id="scMsg"></div></div>
+      <div class="formcard sform hide" id="famBox"><div class="fh"><b>Parámetros Iniciales</b><span class="tabs"><button id="mEsc2">Escuela</button><button class="on">Familia</button></span></div>
+        <label>Capacidad de la cisterna (Litros)<span class="inp"><input id="fCap" type="number" min="1" value="1100"><em>L</em></span></label>
+        <label>Miembros de la familia<span class="inp"><input id="fMem" type="number" min="1" step="1" value="4"><em>personas</em></span></label>
+        <small>* Sin turnos. El consumo de referencia es de 25 L por persona al día (recomendado: 25 a 30 L).</small>
+        <label>Tiempo (días a la semana)<span class="inp"><input id="fDias" type="number" min="1" max="7" value="7"><em>días/sem</em></span></label>
+        <button class="btn" id="fBtn">Simular Evaluación →</button><div class="msg" id="fMsg"></div></div>
+      </div>
+</section>
+
+<section class="page" id="p-calculo" data-title="Cálculo"><h2 class="t">Cálculo</h2>
+  <div class="cols2"><div><div class="tw calc"><table id="calcTable"></table></div><button class="btn ghost small" id="bEdit">✎ Editar porcentajes</button></div>
+    <div class="side"><h3 class="sh">Parámetros:</h3><p><b>AquaLogic</b> calcula los porcentajes recomendados para cada área escolar y agrega una <b>reserva mínima</b> del <span id="resPct">30</span> %. Puedes ajustar los porcentajes con <b>Editar porcentajes</b>.</p><hr>
+      <div class="c" id="calcInfo"></div></div></div></section>
+
+<section class="page" id="p-resumen" data-title="Resumen"><h2 class="t">Resumen</h2>
+  <div class="resumen"><div class="tankbox"><h3 id="tankTitle">Cisterna escolar</h3>
+    <div class="tank"><div class="water" id="water"><i></i></div><div class="resline" id="resline"><span>Reserva</span></div><div class="pct" id="pct">100%</div></div><div id="status" class="badge ok">Estable</div></div>
+    <div class="kpis" id="kpis"></div></div></section>
+
+
+<section class="page" id="p-graficas" data-title="Gráficas"><div class="row"><h2 class="t">Gráficas</h2></div>
+  <div class="cols2e"><div class="cc"><div class="fh"><h3 id="tW"></h3><span class="badge2">Semanal</span></div><div class="chart"><canvas id="chW"></canvas></div></div>
+  <div class="cc"><div class="fh"><h3 id="tD"></h3><span class="badge2">Diario</span></div><div class="chart"><canvas id="chD"></canvas></div></div></div></section>
+
+
+<!-- ANÁLISIS -->
+<section id="analisis" class="page" data-title="Análisis matemático">
+  <h1>Análisis matemático</h1><p class="desc">Datos, reserva mínima, tiempo hasta la reserva, detección de fuga y gráficas, paso a paso.</p>
+  <div class="card math"><h3>Datos</h3>
+    <p>Alumnos totales: N = 400</p>
+    <p>Volumen inicial: V₀ = 50,000 L (cisterna llena)</p>
+    <p>Consumo diario: D = N · C = 400 × 25 = <b>10,000 L/día</b></p>
+    <p>Porcentajes: deben cumplir el 100 %, ejemplo: 35 + 5 + 20 + 10 + 30 = 100</p></div>
+  <div class="card math"><h3>Reserva mínima (30 %)</h3>
+    <p>Función diaria por alumno: R(C) = 0.30 · C → R(C) = 0.30 · 25 = <b>7.5 L</b></p>
+    <p>Función semanal por total de cisterna: R(C) = 0.30 · C → R(C) = 0.30 · 50,000 = <b>15,000 L</b></p>
+    <p>Cada litro más de capacidad agrega 0.30 L de reserva: L(R) = L · R</p></div>
+  <div class="card math"><h3>Tiempo hasta la reserva</h3>
+    <p>Función: V(t) = 50,000 − 10,000t</p>
+    <p>Se iguala a la reserva: 50,000 − 10,000t = 15,000</p>
+    <p>Se despeja: t = 35,000 / 10,000 = <b>3.5 días</b> hasta llegar a la reserva</p></div>
+  <div class="card math"><h3>En caso de fuga</h3>
+    <p>Si el sistema detecta una fuga de 2 L por minuto:</p>
+    <p>Lecturas del sensor: V₁ = 50,000 L y V₂ = 49,880 L (con 60 min entre lecturas)</p>
+    <p>V′ ≈ (V₂ − V₁) / Δt = (−120) / 60 = <b>−2 L/min</b></p>
+    <p>Si la escuela no está en uso y V′ &lt; −0.5 L/min, hay alerta.</p>
+    <p>Como 2 &gt; 0.5, se activa la alerta de fuga.</p></div>
+  <div class="card math"><h3>Gráficas</h3>
+    <p>Gráfica 1 (consumo por día): se dibuja la función S(N) = 25N. Con N = 400, S = <b>10,000 L/día</b>.</p>
+    <p>Gráfica 2 (la semana): se dibuja V(t) = 50,000 − 10,000t por cada día, hasta 5 días.</p></div>
+</section>
+
+
+</main>
+<div id="pager"><button id="prev" aria-label="Página anterior">←</button><span id="pgInfo"></span><button id="next" aria-label="Página siguiente">→</button></div>
+<div id="modal" class="modal hide"><div id="modalBox"></div></div>
+<script src="script.js"></script>
+</body>
+</html>
